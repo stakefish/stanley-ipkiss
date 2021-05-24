@@ -2,6 +2,7 @@
   "name": "stanley-ipkiss",
   "version": "0.1.0",
   "private": true,
+  "homepage": "https://stakefish.github.io/stanley-ipkiss",
   "dependencies": {
     "face-api.js": "0.22.2",
     "ramda": "0.27.1",
