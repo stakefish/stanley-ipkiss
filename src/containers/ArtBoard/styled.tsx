@@ -1,6 +1,7 @@
 import styled from "styled-components"
 
 export const Board = styled.div`
+  max-width: 500px;
   overflow: hidden;
   user-select: none;
   position: relative;

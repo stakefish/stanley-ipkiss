@@ -28,10 +28,6 @@ const ArtBoard: React.FC = () => {
     }
   }, [artBoard, face])
 
-  useEffect(() => {
-    detect()
-  }, [file, face])
-
   const width = MASK_WIDTH
   const height = MASK_HEIGHT
 
@@ -39,6 +35,10 @@ const ArtBoard: React.FC = () => {
     x: -width / SCALE_FACTOR,
     y: -height / SCALE_FACTOR
   }
+
+  useEffect(() => {
+    detect()
+  }, [file, face])
 
   return (
     <>
