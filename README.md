@@ -49,13 +49,19 @@ When code is pushed or a pull request is raised the following steps occur:
 
 ## Deploy
 
-Add homepage property to `package.json` file.
+Open your `package.json` and add a homepage field for your project:
 
 ```json
 "homepage": "http://stakefish.github.io/my-mask-app"
 ```
 
-In case you are using Github pages with custom domain make sure you edit the `deploy` steps located at `.github/workflows/deploy.yml` and add the domain name as `fqdn`.
+or for a custom domain page:
+
+```json
+"homepage": "http://example.com"
+```
+
+If you are using Github pages with a custom domain make sure you edit the `deploy` step located at `.github/workflows/deploy.yml` and add the domain name as `fqdn`, this option will write the given domain name to the CNAME file.
 
 ```yaml
 with:
