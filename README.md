@@ -37,8 +37,8 @@ $  yarn start
 
 ## Workflow
 
-GitHub needs a `ACCESS_TOKEN` secret to use in your workflow. You can use the `ACCESS_TOKEN` to authenticate in a workflow run.
-Read more about GitHub secrets [here](https://docs.github.com/en/actions/reference/encrypted-secrets).
+GitHub needs a `ACCESS_TOKEN` secret to use in your workflow.
+Create an encrypted secret for your project by following the steps below.
 
 1. On GitHub, navigate to the main page of the repository
 2. Under your repository name, click _Settings_
@@ -47,3 +47,5 @@ Read more about GitHub secrets [here](https://docs.github.com/en/actions/referen
 5. Type `ACCESS_TOKEN` the Name input box
 6. Enter the value for your secret
 7. Click Add secret
+
+---
