@@ -7,20 +7,21 @@ import { IPoint } from "face-api.js"
 import { ACTIVE_MASK_DEFAULT, CONTROLLER_SCALE_DEFAULT } from "../helpers/const"
 
 interface ContextType {
-  artBoard?: MutableRefObject<HTMLDivElement | null>
   file?: string
   masks?: string[]
   angles: number[]
   scales: number[]
   coordinates: IPoint[]
   active: number
+  faceRef?: MutableRefObject<HTMLImageElement | null>
+  artboardRef?: MutableRefObject<HTMLDivElement | null>
+  save: () => void
   clear: () => void
   select: (index: number) => void
   rotate: (rotation: number) => void
   scale: (scale: number) => void
   move: (translate: IPoint) => void
   create: (mask: string, angle: number, translation: IPoint) => void
-  save: (face: HTMLImageElement) => void
   drop: (files: File[]) => void
 }
 
@@ -31,7 +32,8 @@ interface Props {
 const ControllerContext: React.Context<ContextType> = React.createContext({} as ContextType)
 
 export const ControllerProvider: React.FC<Props> = ({ children }: Props) => {
-  const artBoard = useRef<HTMLDivElement>(null)
+  const faceRef = useRef<HTMLImageElement>(null)
+  const artboardRef = useRef<HTMLDivElement>(null)
 
   const [file, setFile] = useState<string | undefined>()
   const [active, setActive] = useState<number>(ACTIVE_MASK_DEFAULT)
@@ -79,22 +81,19 @@ export const ControllerProvider: React.FC<Props> = ({ children }: Props) => {
     [active]
   )
 
-  const save = useCallback(
-    async (face: HTMLImageElement) => {
-      if (face && artBoard?.current) {
-        try {
-          const source = await toPng(artBoard.current, {
-            canvasWidth: face.naturalWidth,
-            canvasHeight: face.naturalHeight
-          })
-          downloadjs(source, "mask.png")
-        } catch (error) {
-          console.error(error)
-        }
+  const save = useCallback(async () => {
+    if (faceRef?.current && artboardRef?.current) {
+      try {
+        const source = await toPng(artboardRef.current, {
+          canvasWidth: faceRef.current.naturalWidth,
+          canvasHeight: faceRef.current.naturalHeight
+        })
+        downloadjs(source, "mask.png")
+      } catch (error) {
+        console.error(error)
       }
-    },
-    [active]
-  )
+    }
+  }, [active])
 
   const clear = useCallback(() => {
     setMasks([])
@@ -114,7 +113,8 @@ export const ControllerProvider: React.FC<Props> = ({ children }: Props) => {
   return (
     <ControllerContext.Provider
       value={{
-        artBoard,
+        faceRef,
+        artboardRef,
         file,
         masks,
         angles,

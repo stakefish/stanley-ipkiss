@@ -17,18 +17,30 @@ import {
 import { useController } from "../../helpers/hooks"
 
 const ControlBoard: React.FC = () => {
-  const { angles, scales, active, rotate, scale, drop } = useController()
+  const { angles, scales, active, rotate, scale, save, drop } = useController()
   const { getRootProps, getInputProps, isDragActive } = useDropzone({ accept: "image/*", onDrop: drop })
 
-  const angle = angles?.[active] ?? CONTROLLER_ROTATION_DEFAULT
   const size = scales?.[active] ?? CONTROLLER_SCALE_DEFAULT
+  const angle = angles?.[active] ?? CONTROLLER_ROTATION_DEFAULT
 
   return (
     <>
+      <button onClick={save}>Download</button>
+
       <div {...getRootProps()}>
         <input {...getInputProps()} />
         {isDragActive ? <p>Drop the files here ...</p> : <p>Drag 'n' drop some files here, or click to select files</p>}
       </div>
+
+      <i>Angle: {angle}</i>
+
+      <SliderInput value={angle} min={CONTROLLER_ROTATION_MIN} max={CONTROLLER_ROTATION_MAX} onChange={rotate}>
+        <SliderTrack>
+          <SliderRange />
+          <SliderHandle />
+          <SliderMarker value={angle} />
+        </SliderTrack>
+      </SliderInput>
 
       <i>Scale: {size}</i>
 
@@ -43,16 +55,6 @@ const ControlBoard: React.FC = () => {
           <SliderRange />
           <SliderHandle />
           <SliderMarker value={size} />
-        </SliderTrack>
-      </SliderInput>
-
-      <i>Angle: {angle}</i>
-
-      <SliderInput value={angle} min={CONTROLLER_ROTATION_MIN} max={CONTROLLER_ROTATION_MAX} onChange={rotate}>
-        <SliderTrack>
-          <SliderRange />
-          <SliderHandle />
-          <SliderMarker value={angle} />
         </SliderTrack>
       </SliderInput>
     </>

@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useRef } from "react"
+import React, { useCallback, useEffect } from "react"
 import Draggable from "react-draggable"
 import { IPoint } from "face-api.js"
 
@@ -10,16 +10,14 @@ import { detectFaceLandmarks } from "../../helpers/utils"
 import { Board, Image, Cover, Box } from "./styled"
 
 const ArtBoard: React.FC = () => {
-  const face = useRef<HTMLImageElement>(null)
-
-  const { artBoard, file, masks, scales, angles, coordinates, create, select, move } = useController()
+  const { artboardRef, faceRef, file, masks, scales, angles, coordinates, create, select, move } = useController()
 
   const detect = useCallback(async () => {
-    if (face?.current && artBoard?.current) {
-      const { rotation, position } = await detectFaceLandmarks(face.current, artBoard.current)
+    if (faceRef?.current && artboardRef?.current) {
+      const { rotation, position } = await detectFaceLandmarks(faceRef.current, artboardRef.current)
       create(MASK, rotation, position)
     }
-  }, [file, face])
+  }, [file, faceRef, artboardRef])
 
   const width = MASK_WIDTH
   const height = MASK_HEIGHT
@@ -31,10 +29,10 @@ const ArtBoard: React.FC = () => {
 
   useEffect(() => {
     detect()
-  }, [file, face])
+  }, [file, faceRef])
 
   return (
-    <Board ref={artBoard}>
+    <Board ref={artboardRef}>
       {masks?.map((mask, index) => (
         <Draggable
           key={index}
@@ -56,7 +54,7 @@ const ArtBoard: React.FC = () => {
         </Draggable>
       ))}
 
-      {file ? <Cover src={file} ref={face} /> : null}
+      {file ? <Cover src={file} ref={faceRef} /> : null}
     </Board>
   )
 }
