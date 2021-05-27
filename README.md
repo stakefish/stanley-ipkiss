@@ -38,7 +38,7 @@ $  yarn start
 ## Workflow
 
 GitHub needs a `ACCESS_TOKEN` secret to use in your workflow.
-Create an encrypted secret for your project by following the steps below.
+Before you start please create an encrypted secret for your project by following the steps below.
 
 1. On GitHub, navigate to the main page of the repository
 2. Under your repository name, click _Settings_
@@ -48,4 +48,17 @@ Create an encrypted secret for your project by following the steps below.
 6. Enter the value for your secret
 7. Click Add secret
 
----
+The following steps occur when code is pushed:
+
+1. Install
+2. Code style and type checking
+3. Build for production (only if the code pushed is on the `main` branch)
+4. Deploy to GitHub Pages (only if the code pushed is on the `main` branch)
+
+## Deploy
+
+Add homepage property to `package.json` file.
+
+```json
+  "homepage": "http://stakefish.github.io/my-mask-app"
+```
