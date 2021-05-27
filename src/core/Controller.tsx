@@ -1,24 +1,27 @@
-import React, { ReactNode, useCallback, useState } from "react"
+import React, { MutableRefObject, ReactNode, useCallback, useRef, useState } from "react"
 import downloadjs from "downloadjs"
-import { IPoint } from "face-api.js"
-import { toPng } from "html-to-image"
 import { update } from "ramda"
+import { toPng } from "html-to-image"
+import { IPoint } from "face-api.js"
 
-import { ACTIVE_MASK_DEFAULT } from "../helpers/const"
+import { ACTIVE_MASK_DEFAULT, CONTROLLER_SCALE_DEFAULT } from "../helpers/const"
 
 interface ContextType {
+  artBoard?: MutableRefObject<HTMLDivElement | null>
   file?: string
   masks?: string[]
-  rotation?: number[]
-  translate?: IPoint[]
-  selectedMask: number
-  clearMasks: () => void
-  selectMask: (index: number) => void
-  rotateMask: (rotation: number) => void
-  moveMask: (translate: IPoint) => void
-  addMask: (mask: string, angle: number, translation: IPoint) => void
-  exportMask: (artBoard: HTMLDivElement, face: HTMLImageElement) => void
-  onDrop: (files: File[]) => void
+  angles: number[]
+  scales: number[]
+  coordinates: IPoint[]
+  active: number
+  clear: () => void
+  select: (index: number) => void
+  rotate: (rotation: number) => void
+  scale: (scale: number) => void
+  move: (translate: IPoint) => void
+  create: (mask: string, angle: number, translation: IPoint) => void
+  save: (face: HTMLImageElement) => void
+  drop: (files: File[]) => void
 }
 
 interface Props {
@@ -28,68 +31,81 @@ interface Props {
 const ControllerContext: React.Context<ContextType> = React.createContext({} as ContextType)
 
 export const ControllerProvider: React.FC<Props> = ({ children }: Props) => {
+  const artBoard = useRef<HTMLDivElement>(null)
+
   const [file, setFile] = useState<string | undefined>()
-  const [selectedMask, setSelectedMask] = useState<number>(ACTIVE_MASK_DEFAULT)
+  const [active, setActive] = useState<number>(ACTIVE_MASK_DEFAULT)
 
   const [masks, setMasks] = useState<string[]>([])
-  const [rotation, setRotation] = useState<number[]>([])
-  const [translate, setTranslate] = useState<IPoint[]>([])
+  const [angles, setAngles] = useState<number[]>([])
+  const [scales, setScales] = useState<number[]>([])
+  const [coordinates, setCoordinates] = useState<IPoint[]>([])
 
-  const addMask = useCallback(
-    (mask: string, angle: number, translation: IPoint) => {
+  const create = useCallback(
+    (mask: string, angle: number, position: IPoint) => {
       setMasks([...masks, mask])
-      setRotation([...rotation, angle])
-      setTranslate([...translate, translation])
+      setAngles([...angles, angle])
+      setScales([...scales, CONTROLLER_SCALE_DEFAULT])
+      setCoordinates([...coordinates, position])
     },
-    [masks, translate, rotation]
+    [masks, coordinates, angles, scales]
   )
 
-  const rotateMask = useCallback(
+  const rotate = useCallback(
     (angle: number) => {
-      setRotation(update(selectedMask, angle))
+      setAngles(update(active, angle))
     },
-    [selectedMask, rotation]
+    [active, angles]
   )
 
-  const moveMask = useCallback(
+  const move = useCallback(
     (translation: IPoint) => {
-      setTranslate(update(selectedMask, translation))
+      setCoordinates(update(active, translation))
     },
-    [selectedMask, translate]
+    [active, coordinates]
   )
 
-  const selectMask = useCallback(
+  const scale = useCallback(
+    (scale: number) => {
+      setScales(update(active, scale))
+    },
+    [active, scales]
+  )
+
+  const select = useCallback(
     (index: number) => {
-      setSelectedMask(index)
+      setActive(index)
     },
-    [selectedMask]
+    [active]
   )
 
-  const exportMask = useCallback(
-    async (artBoard: HTMLDivElement, face: HTMLImageElement) => {
-      try {
-        const source = await toPng(artBoard, {
-          canvasWidth: face.naturalWidth,
-          canvasHeight: face.naturalHeight
-        })
-        downloadjs(source, "mask.png")
-      } catch (error) {
-        console.error(error)
+  const save = useCallback(
+    async (face: HTMLImageElement) => {
+      if (face && artBoard?.current) {
+        try {
+          const source = await toPng(artBoard.current, {
+            canvasWidth: face.naturalWidth,
+            canvasHeight: face.naturalHeight
+          })
+          downloadjs(source, "mask.png")
+        } catch (error) {
+          console.error(error)
+        }
       }
     },
-    [selectMask]
+    [active]
   )
 
-  const clearMasks = useCallback(() => {
+  const clear = useCallback(() => {
     setMasks([])
-    setRotation([])
-    setTranslate([])
-    setSelectedMask(ACTIVE_MASK_DEFAULT)
-  }, [selectMask])
+    setAngles([])
+    setCoordinates([])
+    setActive(ACTIVE_MASK_DEFAULT)
+  }, [active])
 
-  const onDrop = useCallback(
+  const drop = useCallback(
     ([file]: File[]) => {
-      clearMasks()
+      clear()
       setFile(URL.createObjectURL(file))
     },
     [file]
@@ -98,18 +114,21 @@ export const ControllerProvider: React.FC<Props> = ({ children }: Props) => {
   return (
     <ControllerContext.Provider
       value={{
+        artBoard,
         file,
         masks,
-        rotation,
-        translate,
-        rotateMask,
-        selectedMask,
-        moveMask,
-        selectMask,
-        clearMasks,
-        addMask,
-        exportMask,
-        onDrop
+        angles,
+        scales,
+        coordinates,
+        rotate,
+        scale,
+        active,
+        move,
+        select,
+        clear,
+        create,
+        save,
+        drop
       }}
     >
       {children}

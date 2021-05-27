@@ -7,26 +7,19 @@ import { MASK, MASK_WIDTH, MASK_HEIGHT, SCALE_FACTOR } from "../../helpers/const
 import { useController } from "../../helpers/hooks"
 import { detectFaceLandmarks } from "../../helpers/utils"
 
-import { Board, Mask, Cover } from "./styled"
+import { Board, Image, Cover, Box } from "./styled"
 
 const ArtBoard: React.FC = () => {
   const face = useRef<HTMLImageElement>(null)
-  const artBoard = useRef<HTMLImageElement>(null)
 
-  const { file, masks, translate, addMask, selectMask, moveMask, exportMask } = useController()
+  const { artBoard, file, masks, scales, angles, coordinates, create, select, move } = useController()
 
   const detect = useCallback(async () => {
     if (face?.current && artBoard?.current) {
-      const { rotation, translation } = await detectFaceLandmarks(face.current, artBoard.current)
-      addMask(MASK, rotation, translation)
+      const { rotation, position } = await detectFaceLandmarks(face.current, artBoard.current)
+      create(MASK, rotation, position)
     }
   }, [file, face])
-
-  const download = useCallback(() => {
-    if (face?.current && artBoard?.current) {
-      exportMask(artBoard.current, face.current)
-    }
-  }, [artBoard, face])
 
   const width = MASK_WIDTH
   const height = MASK_HEIGHT
@@ -41,24 +34,30 @@ const ArtBoard: React.FC = () => {
   }, [file, face])
 
   return (
-    <>
-      <button onClick={download}>Download</button>
+    <Board ref={artBoard}>
+      {masks?.map((mask, index) => (
+        <Draggable
+          key={index}
+          handle="img"
+          position={coordinates?.[index]}
+          positionOffset={positionOffset}
+          onStop={(_, point) => move(point as IPoint)}
+        >
+          <Box key={index}>
+            <Image
+              width={width}
+              height={height}
+              src={mask}
+              angle={angles[index]}
+              scale={scales[index]}
+              onClick={() => select(index)}
+            />
+          </Box>
+        </Draggable>
+      ))}
 
-      <Board ref={artBoard}>
-        {masks?.map((mask, index) => (
-          <Draggable
-            key={index}
-            position={translate?.[index]}
-            positionOffset={positionOffset}
-            onStop={(_, point) => moveMask(point as IPoint)}
-          >
-            <Mask width={width} height={height} src={mask} onClick={() => selectMask(index)} />
-          </Draggable>
-        ))}
-
-        {file ? <Cover src={file} ref={face} /> : null}
-      </Board>
-    </>
+      {file ? <Cover src={file} ref={face} /> : null}
+    </Board>
   )
 }
 

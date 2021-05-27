@@ -1,7 +1,7 @@
 import { detectSingleFace, TinyFaceDetectorOptions, Point, IPoint } from "face-api.js"
 import { isNil } from "ramda"
 
-import { ONE_RADIAN_IN_DEGREES, ROTATION_DEFAULT, SCALE_FACTOR } from "../helpers/const"
+import { ONE_RADIAN_IN_DEGREES, CONTROLLER_ROTATION_DEFAULT, SCALE_FACTOR } from "../helpers/const"
 
 export const angleBetweenPoints = (left: IPoint, right: IPoint) => {
   const dy = right.y - left.y
@@ -41,7 +41,7 @@ export const detectFaceLandmarks = async (face: HTMLImageElement, artBoard: HTML
 
   if (leftEye && rightEye && nose) {
     return {
-      translation: {
+      position: {
         x: nose.x * scale,
         y: Math.min(leftEye.y, rightEye.y) * scale
       },
@@ -50,10 +50,10 @@ export const detectFaceLandmarks = async (face: HTMLImageElement, artBoard: HTML
   }
 
   return {
-    translation: {
+    position: {
       x: artBoard.offsetWidth / SCALE_FACTOR,
       y: artBoard.offsetHeight / SCALE_FACTOR
     },
-    rotation: ROTATION_DEFAULT
+    rotation: CONTROLLER_ROTATION_DEFAULT
   } as const
 }

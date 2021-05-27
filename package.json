@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@reach/slider": "0.15.0",
     "@types/react-dnd": "3.0.2",
     "downloadjs": "1.4.7",
     "face-api.js": "0.22.2",
