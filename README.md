@@ -52,7 +52,7 @@ When code is pushed or a pull request is raised the following steps occur:
 Add homepage property to `package.json` file.
 
 ```json
-  "homepage": "http://stakefish.github.io/my-mask-app"
+"homepage": "http://stakefish.github.io/my-mask-app"
 ```
 
 In case you are using Github pages with custom domain make sure you edit the `deploy` steps located at `.github/workflows/deploy.yml` and add the domain name as `fqdn`.
