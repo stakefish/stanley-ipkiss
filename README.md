@@ -4,10 +4,11 @@ A Photo Editor application template with simple, easy support for image editing 
 
 ## Features
 
-- [x] Facial recognition with [face-api.js](https://github.com/justadudewhohacks/face-api.js/)
-- [x] Multiple stickers type
-- [x] CSS 3D transformations
-- [x] GitHub Pages deploy
+- ✅  Facial recognition with [face-api.js](https://github.com/justadudewhohacks/face-api.js/)
+- ✅  Multiple stickers type
+- ✅  CSS 3D transformations
+- ✅  GitHub Pages deploy
+
 
 ## Run Locally
 
