@@ -36,7 +36,7 @@ jobs:
       - name: Build GitHub Pages
         env:
           NODE_ENV: production
-          PUBLIC_URL: https://mask.solana.fish/
+          PUBLIC_URL: https://stakefish.github.io/stanley-ipkiss/
         run: npm run build
 
       - name: Deploy GitHub Pages
@@ -45,7 +45,6 @@ jobs:
         with:
           target_branch: gh-pages
           build_dir: build
-          fqdn: https://mask.solana.fish
         env:
           GITHUB_TOKEN: ${{ secrets.ACCESS_TOKEN }}
 
