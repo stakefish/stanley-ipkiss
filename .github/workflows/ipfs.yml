@@ -1,7 +1,7 @@
-name: Build and Deploy
-on: [push, pull_request]
+name: Build and Deploy IPFS
+on: [pull_request]
 jobs:
-  build-and-deploy:
+  build-and-deploy-ipfs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -30,9 +30,10 @@ jobs:
       - name: Lint
         run: npm run lint
 
-      - name: Build
+      - name: Build IPFS
         env:
           NODE_ENV: production
+          PUBLIC_URL: ./
         run: npm run build
 
       - name: Deploy IPFS
@@ -41,24 +42,8 @@ jobs:
         with:
           path: build
 
-      - name: Deploy GitHub Pages
-        if: success() && github.ref == 'refs/heads/master'
-        uses: crazy-max/ghaction-github-pages@v2
-        with:
-          target_branch: gh-pages
-          build_dir: build
-        env:
-          GITHUB_TOKEN: ${{ secrets.ACCESS_TOKEN }}
-
-      - name: Post hash
-        if: github.event_name == 'pull_request'
+      - name: Publish IPFS hash
         uses: thollander/actions-comment-pull-request@master
         with:
           message: "[IPFS](https://ipfs.io/ipfs/${{ steps.ipfs.outputs.hash }}) 🌎"
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Contributors
-        if: github.ref == 'refs/heads/main'
-        uses: akhilmhdh/contributors-readme-action@v2.1.2
-        env:
-          GITHUB_TOKEN: ${{ secrets.ACCESS_TOKEN }}
