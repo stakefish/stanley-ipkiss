@@ -43,7 +43,7 @@ jobs:
           path: build
 
       - name: Publish IPFS hash
-        uses: thollander/actions-comment-pull-request@master
+        uses: thollander/actions-comment-pull-request@main
         with:
           message: "[IPFS](https://ipfs.io/ipfs/${{ steps.ipfs.outputs.hash }}) 🌎"
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
