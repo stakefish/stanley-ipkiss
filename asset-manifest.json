@@ -1,0 +1,20 @@
+{
+  "files": {
+    "main.js": "https://stakefish.github.io/stanley-ipkiss/static/js/main.ff31c2e1.chunk.js",
+    "main.js.map": "https://stakefish.github.io/stanley-ipkiss/static/js/main.ff31c2e1.chunk.js.map",
+    "runtime-main.js": "https://stakefish.github.io/stanley-ipkiss/static/js/runtime-main.0fde119a.js",
+    "runtime-main.js.map": "https://stakefish.github.io/stanley-ipkiss/static/js/runtime-main.0fde119a.js.map",
+    "static/css/2.709c2c96.chunk.css": "https://stakefish.github.io/stanley-ipkiss/static/css/2.709c2c96.chunk.css",
+    "static/js/2.11e90698.chunk.js": "https://stakefish.github.io/stanley-ipkiss/static/js/2.11e90698.chunk.js",
+    "static/js/2.11e90698.chunk.js.map": "https://stakefish.github.io/stanley-ipkiss/static/js/2.11e90698.chunk.js.map",
+    "index.html": "https://stakefish.github.io/stanley-ipkiss/index.html",
+    "static/css/2.709c2c96.chunk.css.map": "https://stakefish.github.io/stanley-ipkiss/static/css/2.709c2c96.chunk.css.map",
+    "static/js/2.11e90698.chunk.js.LICENSE.txt": "https://stakefish.github.io/stanley-ipkiss/static/js/2.11e90698.chunk.js.LICENSE.txt"
+  },
+  "entrypoints": [
+    "static/js/runtime-main.0fde119a.js",
+    "static/css/2.709c2c96.chunk.css",
+    "static/js/2.11e90698.chunk.js",
+    "static/js/main.ff31c2e1.chunk.js"
+  ]
+}
